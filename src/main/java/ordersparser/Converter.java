@@ -11,18 +11,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-public class Convector {
+public class Converter {
 
     private ObjectMapper mapper = new ObjectMapper();
     private BlockingQueue<Order> queue;
 
     @Autowired
-    public Convector(BlockingQueue<Order> queue) {
+    public Converter(BlockingQueue<Order> queue) {
         this.queue = queue;
     }
 
     void convert(long amountLines){
-        ExecutorService executor = Executors.newFixedThreadPool(3);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         while (amountLines > 0) {
             amountLines--;
             executor.execute(new ConvertTask());

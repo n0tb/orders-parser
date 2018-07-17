@@ -20,7 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @SpringBootApplication
 public class OrdersParserApplication implements CommandLineRunner {
 
-    @Autowired private Convector convector;
+    @Autowired private Converter converter;
 
     public static void main(String[] args) {
         SpringApplication.run(OrdersParserApplication.class, args);
@@ -47,7 +47,7 @@ public class OrdersParserApplication implements CommandLineRunner {
             reader.setParser((Parser) parser[1]);
             long numberLines = reader.numberLines();
             new Thread(reader).start();
-            convector.convert(numberLines);
+            converter.convert(numberLines);
         }
     }
 
