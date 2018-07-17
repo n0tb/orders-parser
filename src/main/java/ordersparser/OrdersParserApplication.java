@@ -41,7 +41,6 @@ public class OrdersParserApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         List<Object[]> parsers = getParser(args);
-
         for (Object[] parser : parsers) {
             Reader reader = getReader();
             reader.setFileName((String) parser[0]);
@@ -56,7 +55,8 @@ public class OrdersParserApplication implements CommandLineRunner {
         List<Object[]> parsers = new ArrayList<>(files.length);
         for (String file : files) {
             try {
-                String extension = file.split("\\.")[1];
+                String[] elements = file.split("\\.");
+                String extension = elements[elements.length - 1];
                 switch (extension) {
                     case "csv":
                         parsers.add(new Object[]{file, new ParserCsv()});
@@ -68,7 +68,7 @@ public class OrdersParserApplication implements CommandLineRunner {
                         throw new IllegalFileFormatException();
                 }
             } catch (IllegalFileFormatException e) {
-                System.out.println("[ERROR] " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
         return parsers;
