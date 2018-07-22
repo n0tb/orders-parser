@@ -16,7 +16,6 @@ public class ParserJson implements Parser {
     @Override
     public Order parseToObj(String line, String fileName, int numberLine) {
         String[] elements = line.split(",");
-        String exception;
         Order order = new Order();
         order.line = numberLine;
         order.filename = fileName;
@@ -24,17 +23,20 @@ public class ParserJson implements Parser {
         try {
             if (elements.length < 4) {
                 throw new IllegalNumberColumnsException(elements.length);
+            } else if (elements.length == 6) {
+                order = mapper.readValue(line, Order.class);
+                order.filename = fileName;
+            } else {
+                RawOrder rawOrder = mapper.readValue(line, RawOrder.class);
+                order.id = rawOrder.orderId;
+                order.amount = rawOrder.amount;
+                order.comment = rawOrder.comment;
+                order.currency = rawOrder.currency;
+                order.result = "OK";
             }
-            RawOrder rawOrder = mapper.readValue(line, RawOrder.class);
-            order.id = rawOrder.orderId;
-            order.amount = rawOrder.amount;
-            order.comment = rawOrder.comment;
-            order.currency = rawOrder.currency;
-            order.result = "OK";
 
         } catch (IllegalNumberColumnsException e) {
-            exception = e.getMessage();
-            order.result = exception;
+            order.result = e.getMessage();
         } catch (IOException e) {
             if (e instanceof UnrecognizedPropertyException) {
                 order.result = "Unrecognized field: " +
