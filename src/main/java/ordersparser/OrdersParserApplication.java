@@ -5,6 +5,7 @@ import ordersparser.exception.IllegalFileFormatException;
 import ordersparser.parser.Parser;
 import ordersparser.parser.ParserCsv;
 import ordersparser.parser.ParserJson;
+import ordersparser.parser.Parsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -63,10 +64,10 @@ public class OrdersParserApplication implements CommandLineRunner {
                 String extension = elements[elements.length - 1];
                 switch (extension) {
                     case "csv":
-                        parsers.add(new Object[]{file, new ParserCsv()});
+                        parsers.add(new Object[]{file, Parsers.newParserCsv()});
                         break;
                     case "json":
-                        parsers.add(new Object[]{file, new ParserJson()});
+                        parsers.add(new Object[]{file, Parsers.newParserJson()});
                         break;
                     default:
                         throw new IllegalFileFormatException();
