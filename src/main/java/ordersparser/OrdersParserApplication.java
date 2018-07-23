@@ -14,8 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 @SpringBootApplication
 public class OrdersParserApplication implements CommandLineRunner {
@@ -44,14 +43,23 @@ public class OrdersParserApplication implements CommandLineRunner {
         String fileJson = "test.json";
         String badtest = "badtest.json";
         String[] args1 = {fileCsv, fileJson, badtest};
+
+        String filename;
+        List<String> result;
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
         List<Object[]> parsers = Parsers.getParser(args1);
         for (Object[] parser : parsers) {
+            filename = (String) parser[0];
             Reader reader = getReader();
-            reader.setFileName((String) parser[0]);
+            reader.setFileName(filename);
             reader.setParser((Parser) parser[1]);
             long numberLines = reader.numberLines();
             new Thread(reader).start();
-            converter.convert(numberLines);
+
+            result = converter.convert(numberLines, executorService);
+            System.out.println("\nFile " + filename + ": ");
+            result.forEach(System.out::println);
         }
+        executorService.shutdown();
     }
 }

@@ -6,52 +6,68 @@ import ordersparser.domain.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.*;
 
 @Service
 public class Converter {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper;
     private BlockingQueue<Order> queue;
+    private long amountLines;
 
     @Autowired
     public Converter(BlockingQueue<Order> queue) {
         this.queue = queue;
+        mapper = new ObjectMapper();
     }
 
-    public void convert(long amountLines){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        while (amountLines > 0) {
-            amountLines--;
-            executor.execute(new ConvertTask());
+    public List<String> convert(long amountLines, ExecutorService executorService){
+        this.amountLines = amountLines;
+        List<String> jsonStrings = null;
+
+        Future<List<String>> future = executorService.submit(new ConversionTask());
+        try {
+            jsonStrings = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-        executor.shutdown();
+        return jsonStrings;
     }
 
-    private class ConvertTask implements Runnable {
+    private class ConversionTask implements Callable<List<String>> {
+        List<String> jsonStrings = new LinkedList<>();
         @Override
-        public void run(){
-            try {
-                Order order = queue.take();
-                objToJson(order);
-            } catch (InterruptedException e) {
-                System.out.println("[ERROR] " + e.getMessage());
+        public List<String> call(){
+            while (amountLines > 0) {
+                amountLines--;
+                try {
+                    Order order = queue.take();
+                    jsonStrings.add(objToJson(order));
+                } catch (InterruptedException e) {
+                    System.out.println("[ERROR] " + e.getMessage());
+                }
             }
+            return jsonStrings;
         }
     }
 
-    private void objToJson(Order order) {
+    private String objToJson(Order order) {
+        String resultJsonString = null;
         try {
             if (!order.result.equals("OK"))
-                System.out.println("{\"filename\":\"" + order.filename +
+                resultJsonString = "{\"filename\":\"" + order.filename +
                         "\", line\":" + order.line +
-                        ", \"result\":\""  + order.result + "\"}");
+                        ", \"jsonStrings\":\"" + order.result + "\"}";
             else
-                System.out.println(mapper.writeValueAsString(order));
+                resultJsonString = mapper.writeValueAsString(order);
+
         } catch (JsonProcessingException e) {
-            System.out.println("Error converting a string.");
+            System.out.println("Error converting a string");
         }
+        return resultJsonString;
     }
 }
