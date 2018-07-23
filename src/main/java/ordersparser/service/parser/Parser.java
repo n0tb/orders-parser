@@ -1,4 +1,4 @@
-package ordersparser.parser;
+package ordersparser.service.parser;
 
 import ordersparser.domain.Order;
 

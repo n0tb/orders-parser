@@ -1,6 +1,6 @@
-package ordersparser;
+package ordersparser.service;
 
-import ordersparser.parser.Parser;
+import ordersparser.service.parser.Parser;
 import ordersparser.domain.Order;
 
 import java.io.IOException;
@@ -57,9 +57,9 @@ public class Reader implements Runnable {
         } catch (IOException e) {
             if (e instanceof NoSuchFileException) {
                 System.out.println("[ERROR] Failed to open the file: " + fileName +
-                        "  Check the file name");
+                        "  check the file name");
             } else if (e instanceof AccessDeniedException) {
-                System.out.println("[ERROR] Insufficient permission to access file" + fileName);
+                System.out.println("[ERROR] Insufficient permission to access file: " + fileName);
             } else {
                 System.out.println("Error reading file" + fileName);
             }

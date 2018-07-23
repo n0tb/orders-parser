@@ -1,4 +1,4 @@
-package ordersparser;
+package ordersparser.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +21,7 @@ public class Converter {
         this.queue = queue;
     }
 
-    void convert(long amountLines){
+    public void convert(long amountLines){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         while (amountLines > 0) {
             amountLines--;

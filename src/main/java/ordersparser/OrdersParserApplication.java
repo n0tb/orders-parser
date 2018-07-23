@@ -2,10 +2,10 @@ package ordersparser;
 
 import ordersparser.domain.Order;
 import ordersparser.exception.IllegalFileFormatException;
-import ordersparser.parser.Parser;
-import ordersparser.parser.ParserCsv;
-import ordersparser.parser.ParserJson;
-import ordersparser.parser.Parsers;
+import ordersparser.service.parser.Parser;
+import ordersparser.service.parser.Parsers;
+import ordersparser.service.Converter;
+import ordersparser.service.Reader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

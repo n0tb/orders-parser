@@ -1,4 +1,4 @@
-package ordersparser.parser;
+package ordersparser.service.parser;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,9 +16,7 @@ public class ParserJson implements Parser {
     @Override
     public Order parseToObj(String line, String fileName, int numberLine) {
         String[] elements = line.split(",");
-        Order order = new Order();
-        order.line = numberLine;
-        order.filename = fileName;
+        Order order = new Order(fileName, numberLine);
 
         try {
             if (elements.length < 4) {
@@ -28,11 +26,7 @@ public class ParserJson implements Parser {
                 order.filename = fileName;
             } else {
                 RawOrder rawOrder = mapper.readValue(line, RawOrder.class);
-                order.id = rawOrder.orderId;
-                order.amount = rawOrder.amount;
-                order.comment = rawOrder.comment;
-                order.currency = rawOrder.currency;
-                order.result = "OK";
+                fillOrder(order, rawOrder);
             }
 
         } catch (IllegalNumberColumnsException e) {
@@ -48,6 +42,14 @@ public class ParserJson implements Parser {
             }
         }
         return order;
+    }
+
+    private void fillOrder(Order order, RawOrder rawOrder) {
+        order.id = rawOrder.orderId;
+        order.amount = rawOrder.amount;
+        order.comment = rawOrder.comment;
+        order.currency = rawOrder.currency;
+        order.result = "OK";
     }
 
     @Override

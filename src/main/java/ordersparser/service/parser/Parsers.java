@@ -1,4 +1,4 @@
-package ordersparser.parser;
+package ordersparser.service.parser;
 
 public class Parsers {
 
