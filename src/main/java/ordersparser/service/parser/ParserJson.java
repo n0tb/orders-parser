@@ -23,6 +23,7 @@ public class ParserJson implements Parser {
                 throw new IllegalNumberColumnsException(elements.length);
             } else if (elements.length == 6) {
                 order = mapper.readValue(line, Order.class);
+                order.line = numberLine;
                 order.filename = fileName;
             } else {
                 RawOrder rawOrder = mapper.readValue(line, RawOrder.class);

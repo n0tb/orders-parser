@@ -10,18 +10,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class ParserJsonTest {
 
     private Parser parserJson;
-    private String filename;
+    private String[] filename;
     private Order standardOrder;
 
     @BeforeEach
     void setUp() {
-        parserJson = Parsers.newParserJson();
-        filename = "test.json";
+        filename = new String[] {"test.json"};
+        parserJson = (Parser) Parsers.getParser(filename).get(0)[1];
         standardOrder = new OrderBuilder()
                 .id(1).amount(100)
                 .currency("USD")
                 .comment("оплата заказа")
-                .filename(filename)
+                .filename(filename[0])
                 .line(1).result("OK")
                 .build();
     }
@@ -31,7 +31,7 @@ class ParserJsonTest {
         String jsonCorrectString = "{\"orderId\":1, \"amount\":100, " +
                 "\"currency\":\"USD\", \"comment\":\"оплата заказа\"}";
 
-        Order order = parserJson.parseToObj(jsonCorrectString, filename, 1);
+        Order order = parserJson.parseToObj(jsonCorrectString, filename[0], 1);
         assertEquals(standardOrder, order);
     }
 
@@ -40,7 +40,7 @@ class ParserJsonTest {
         String formattedJson = "{\"id\":1,\"amount\":100,\"comment\":\"оплата заказа\"," +
                 "\"filename\":\"test.json\",\"line\":1,\"result\":\"OK\"}";
 
-        Order order = parserJson.parseToObj(formattedJson, filename, 1);
+        Order order = parserJson.parseToObj(formattedJson, filename[0], 1);
         order.currency = "USD";
 
         assertEquals(standardOrder, order);
@@ -51,7 +51,7 @@ class ParserJsonTest {
         String jsonInsufficientColumnsString = "{\"orderId\":1, \"amount\":100," +
                 " \"currency\":\"USD\"}";
 
-        Order order = parserJson.parseToObj(jsonInsufficientColumnsString, filename, 1);
+        Order order = parserJson.parseToObj(jsonInsufficientColumnsString, filename[0], 1);
         assertEquals("Invalid number of columns (required 4, received 3)", order.result);
     }
 
@@ -60,7 +60,7 @@ class ParserJsonTest {
         String jsonUnrecognizedField = "{\"id\":5, \"amount\":100, " +
                 "\"currency\":\"USD\", \"comment\":\"оплата заказа\"}";
 
-        Order order = parserJson.parseToObj(jsonUnrecognizedField, filename, 1);
+        Order order = parserJson.parseToObj(jsonUnrecognizedField, filename[0], 1);
         assertEquals("Unrecognized field: id", order.result);
     }
 
@@ -69,7 +69,7 @@ class ParserJsonTest {
         String jsonUnrecognizedToken = "{\"orderId\":xxx, \"amount\":\"100\", " +
                 "\"currency\":\"USD\", \"comment\":\"оплата заказа\"}";
 
-        Order order = parserJson.parseToObj(jsonUnrecognizedToken, filename, 1);
+        Order order = parserJson.parseToObj(jsonUnrecognizedToken, filename[0], 1);
         assertEquals("Unrecognized token", order.result);
     }
 }
