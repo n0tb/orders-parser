@@ -1,11 +1,10 @@
 package ordersparser;
 
 import ordersparser.domain.Order;
-import ordersparser.exception.IllegalFileFormatException;
-import ordersparser.service.parser.Parser;
-import ordersparser.service.parser.Parsers;
 import ordersparser.service.Converter;
 import ordersparser.service.Reader;
+import ordersparser.service.parser.Parser;
+import ordersparser.service.parser.Parsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @SpringBootApplication
 public class OrdersParserApplication implements CommandLineRunner {
@@ -39,15 +41,10 @@ public class OrdersParserApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String fileCsv = "test.csv";
-        String fileJson = "test.json";
-        String badtest = "badtest.json";
-        String[] args1 = {fileCsv, fileJson, badtest};
-
         String filename;
         List<String> result;
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        List<Object[]> parsers = Parsers.getParser(args1);
+        List<Object[]> parsers = Parsers.getParser(args);
         for (Object[] parser : parsers) {
             filename = (String) parser[0];
             Reader reader = getReader();
