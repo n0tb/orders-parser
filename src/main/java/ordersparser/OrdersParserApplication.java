@@ -41,11 +41,7 @@ public class OrdersParserApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String fileCsv = "test.csv";
-        String fileJson = "test.json";
-        String badtest = "badtest.json";
-        String[] args1 = {fileCsv, fileJson, badtest};
-        List<Object[]> parsers = getParser(args1);
+        List<Object[]> parsers = getParser(args);
         for (Object[] parser : parsers) {
             Reader reader = getReader();
             reader.setFileName((String) parser[0]);
