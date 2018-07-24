@@ -1,8 +1,8 @@
 package ordersparser.domain;
 
 public class RawOrder {
-    public Long orderId;
-    public Long amount;
+    public long orderId;
+    public long amount;
     public String currency;
     public String comment;
 }

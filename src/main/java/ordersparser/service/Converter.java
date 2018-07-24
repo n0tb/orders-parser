@@ -61,7 +61,7 @@ public class Converter {
             if (!order.result.equals("OK"))
                 resultJsonString = "{\"filename\":\"" + order.filename +
                         "\", line\":" + order.line +
-                        ", \"jsonStrings\":\"" + order.result + "\"}";
+                        ", \"result\":\"" + order.result + "\"}";
             else
                 resultJsonString = mapper.writeValueAsString(order);
 

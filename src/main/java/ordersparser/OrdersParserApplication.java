@@ -44,9 +44,12 @@ public class OrdersParserApplication implements CommandLineRunner {
         String filename;
         List<String> result;
         ExecutorService executorService = Executors.newSingleThreadExecutor();
+
         List<Object[]> parsers = Parsers.getParser(args);
         for (Object[] parser : parsers) {
             filename = (String) parser[0];
+            System.out.println("\nFile " + filename + ": ");
+
             Reader reader = getReader();
             reader.setFileName(filename);
             reader.setParser((Parser) parser[1]);
@@ -54,7 +57,6 @@ public class OrdersParserApplication implements CommandLineRunner {
             new Thread(reader).start();
 
             result = converter.convert(numberLines, executorService);
-            System.out.println("\nFile " + filename + ": ");
             result.forEach(System.out::println);
         }
         executorService.shutdown();

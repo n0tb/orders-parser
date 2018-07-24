@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 
 public class Order {
-    public Long id;
-    public Long amount;
+    public long id;
+    public long amount;
     @JsonIgnore
     public String currency;
     public String comment;

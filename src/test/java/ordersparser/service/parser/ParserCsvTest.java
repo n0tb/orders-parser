@@ -4,12 +4,10 @@ import ordersparser.domain.Order;
 import ordersparser.domain.OrderBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ParserCsvTest {
+public class ParserCsvTest {
 
     private Parser parserCsv;
     private String[] filename;

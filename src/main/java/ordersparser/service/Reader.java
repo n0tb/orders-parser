@@ -57,7 +57,7 @@ public class Reader implements Runnable {
         } catch (IOException e) {
             if (e instanceof NoSuchFileException) {
                 System.out.println("[ERROR] Failed to open the file: " + fileName +
-                        "  check the file name");
+                        "  Check the file name");
             } else if (e instanceof AccessDeniedException) {
                 System.out.println("[ERROR] Insufficient permission to access file: " + fileName);
             } else {
