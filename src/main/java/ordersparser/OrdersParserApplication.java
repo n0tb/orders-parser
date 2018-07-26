@@ -10,7 +10,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -28,11 +27,8 @@ public class OrdersParserApplication implements CommandLineRunner {
     @Autowired
     private Converter converter;
 
-    @Bean
-    @Scope(value = "prototype")
-    Reader getReader() {
-        return new Reader(getQueue());
-    }
+    @Autowired
+    private Reader reader;
 
     @Bean
     BlockingQueue<Order> getQueue() {
@@ -50,7 +46,6 @@ public class OrdersParserApplication implements CommandLineRunner {
             filename = (String) parser[0];
             System.out.println("\nFile " + filename + ": ");
 
-            Reader reader = getReader();
             reader.setFileName(filename);
             reader.setParser((Parser) parser[1]);
             long numberLines = reader.numberLines();

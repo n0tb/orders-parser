@@ -2,6 +2,7 @@ package ordersparser.service;
 
 import ordersparser.service.parser.Parser;
 import ordersparser.domain.Order;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -12,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.stream.Stream;
 
+@Service
 public class Reader implements Runnable {
 
     private Parser parser;
@@ -25,6 +27,7 @@ public class Reader implements Runnable {
     }
 
     public long numberLines() {
+        lineNumber = 0;
         try (Stream<String> lines = Files.lines(Paths.get(fileName), Charset.forName("cp1251"))) {
             return lines.count();
         } catch (IOException e) {
