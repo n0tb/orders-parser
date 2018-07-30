@@ -39,7 +39,7 @@ public class OrdersParserApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         String filename;
         List<String> result;
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         List<Object[]> parsers = Parsers.getParser(args);
         for (Object[] parser : parsers) {
@@ -49,7 +49,7 @@ public class OrdersParserApplication implements CommandLineRunner {
             reader.setFileName(filename);
             reader.setParser((Parser) parser[1]);
             long numberLines = reader.numberLines();
-            new Thread(reader).start();
+            executorService.execute(reader);
 
             result = converter.convert(numberLines, executorService);
             result.forEach(System.out::println);
